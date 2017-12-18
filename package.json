@@ -5,7 +5,8 @@
   "main": "bot.js",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "webhook-discord": "^2.0.6"
+    "webhook-discord": "^2.0.6",
+    "winston": "^2.4.0"
   },
   "devDependencies": {},
   "scripts": {
