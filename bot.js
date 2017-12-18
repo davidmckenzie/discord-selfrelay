@@ -36,7 +36,7 @@ bot.on('disconnect', function(errMsg, code) {
 bot.on('message', function (message) {
     if (chanArr.indexOf(message.channel.id) > -1) {
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
-        console.log(obj);
+        //console.log(obj);
         console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
         if (message.content) {
             //hook = new Webhook(obj.webhook);
