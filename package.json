@@ -1,0 +1,24 @@
+{
+  "name": "discord-selfrelay",
+  "version": "1.0.0",
+  "description": "Relay messages from one Discord server to another via a selfbot and webhook",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "webhook-discord": "^2.0.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidmckenzie/discord-selfrelay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidmckenzie/discord-selfrelay/issues"
+  },
+  "homepage": "https://github.com/davidmckenzie/discord-selfrelay#readme"
+}
