@@ -1,20 +1,30 @@
 var auth = require('./auth.json');
 var Discord = require('discord.js');
 var Webhook = require("webhook-discord");
+var _ = require("underscore");
 var logger = require('winston');
-
-var Hook = new Webhook(auth.webhook);
-logger.info('Initializing bot');
+    logger.info('Initializing bot');
 var bot = new Discord.Client();
-bot.login(auth.token);
+    bot.login(auth.token);
 
-var searchChan;
+var channels = auth.channels;
+var chanArr = [];
+var hook = new Webhook(auth.webhook);
 
 bot.on('ready', function () {
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(bot.user.username + ' - (' + bot.user.id + ')');
-    searchChan = bot.channels.find('name', auth.channel);
+    for (i in channels) {
+        channels[i].id = bot.channels.find('name', channels[i].name).id;
+        console.log(`Found channel ${channels[i].name} with ID ${channels[i].id}`);
+        //channels[i].hook = require('discord-bot-webhook');
+        //channels[i].hook.hookId = channels[i].hookId;
+        //channels[i].hook.hookToken = channels[i].hookToken;
+        //channels[i].hook = new channels[i].req(channels[i].webhook);
+        chanArr.push(channels[i].id);
+        console.log(channels[i]);
+    }
 });
 
 bot.on('disconnect', function(errMsg, code) {
@@ -24,9 +34,14 @@ bot.on('disconnect', function(errMsg, code) {
 });
 
 bot.on('message', function (message) {
-    if (message.channel.id == searchChan.id) {
-        console.log(`#${auth.channel} ${message.author.username}: ${message.content}`);
-        Hook.custom(`#${auth.channel}`,message.content,message.author.username);
-        // send webhook
+    if (chanArr.indexOf(message.channel.id) > -1) {
+        var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
+        console.log(obj);
+        console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+        if (message.content) {
+            //hook = new Webhook(obj.webhook);
+            hook.custom(`${message.guild.name}`,`${message.author.username}: ${message.content}`,`#${message.channel.name}`);
+            //channels[i].hook.sendMessage(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+        }
     }
 });

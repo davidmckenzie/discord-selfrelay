@@ -4,7 +4,9 @@
   "description": "Relay messages from one Discord server to another via a selfbot and webhook",
   "main": "bot.js",
   "dependencies": {
+    "discord-bot-webhook": "^1.0.4",
     "discord.js": "^11.2.1",
+    "underscore": "^1.8.3",
     "webhook-discord": "^2.0.6",
     "winston": "^2.4.0"
   },
