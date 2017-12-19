@@ -2,7 +2,9 @@
     "token": "",
     "webhook": "",
     "channels": [
-        {"name": "",
-        "webhook": ""}
+        {
+            "name": "",
+            "webhook": ""
+        }
     ]
  } 

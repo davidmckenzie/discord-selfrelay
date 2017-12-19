@@ -1,15 +1,15 @@
 var auth = require('./auth.json');
 var Discord = require('discord.js');
-var Webhook = require("webhook-discord");
 var _ = require("underscore");
 var logger = require('winston');
     logger.info('Initializing bot');
 var bot = new Discord.Client();
     bot.login(auth.token);
 
+var request = require("request");
+
 var channels = auth.channels;
 var chanArr = [];
-var hook = new Webhook(auth.webhook);
 
 bot.on('ready', function () {
     logger.info('Connected');
@@ -18,10 +18,6 @@ bot.on('ready', function () {
     for (i in channels) {
         channels[i].id = bot.channels.find('name', channels[i].name).id;
         console.log(`Found channel ${channels[i].name} with ID ${channels[i].id}`);
-        //channels[i].hook = require('discord-bot-webhook');
-        //channels[i].hook.hookId = channels[i].hookId;
-        //channels[i].hook.hookToken = channels[i].hookToken;
-        //channels[i].hook = new channels[i].req(channels[i].webhook);
         chanArr.push(channels[i].id);
         console.log(channels[i]);
     }
@@ -36,12 +32,59 @@ bot.on('disconnect', function(errMsg, code) {
 bot.on('message', function (message) {
     if (chanArr.indexOf(message.channel.id) > -1) {
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
-        //console.log(obj);
-        console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
-        if (message.content) {
-            //hook = new Webhook(obj.webhook);
-            hook.custom(`${message.guild.name}`,`${message.author.username}: ${message.content}`,`#${message.channel.name}`);
-            //channels[i].hook.sendMessage(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+
+        var post_data = {};
+            post_data.username = message.guild.name;
+
+        if (message.content && message.content != '') {
+            console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+            post_data.content = `**#${message.channel.name}** ${message.author.username}: ${message.content}`
         }
+
+        if (message.embeds.length > 0) {
+            var embed = message.embeds[0];
+            delete embed['message'];
+            delete embed['createdTimestamp'];
+            if (embed['image']) {
+                delete embed['image']['embed'];
+                delete embed['image']['proxyURL'];
+                delete embed['image']['height'];
+                delete embed['image']['width'];
+            }
+            if (embed['video'])
+                delete embed['video'];
+            if (embed['provider'])
+                delete embed['provider'];
+            if (embed['fields'].length < 1)
+                delete embed['fields'];
+            for (var propName in embed) { 
+                if (embed[propName] === null || embed[propName] === undefined || embed[propName] == []) {
+                    delete embed[propName];
+                }
+            }
+            console.log(embed);
+            var embedTest = {"color":"#3AA3E3","fields":[{"name":"name","value":"value","inline":false},{"name":"name","value":"value","inline":true}]};
+            post_data.embeds = [embed];
+        }
+        
+        var url = obj.webhook;
+        var options = {
+          method: 'post',
+          body: post_data,
+          json: true,
+          url: url
+        }
+
+        request(options, function (err, res, body) {
+          if (err) {
+            console.error('error posting json: ', err)
+            throw err
+          }
+          var headers = res.headers
+          var statusCode = res.statusCode
+          //console.log('headers: ', headers)
+          console.log('statusCode: ', statusCode)
+          //console.log('body: ', body)
+        })
     }
 });
