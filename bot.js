@@ -66,6 +66,12 @@ bot.on('message', function (message) {
             var embedTest = {"color":"#3AA3E3","fields":[{"name":"name","value":"value","inline":false},{"name":"name","value":"value","inline":true}]};
             post_data.embeds = [embed];
         }
+
+        if (message.attachments.length > 0) {
+            console.log(message.attachments);
+            var attach = message.attachments[0];
+            post_data.content += '\n'+attach.url;
+        }
         
         var url = obj.webhook;
         var options = {
