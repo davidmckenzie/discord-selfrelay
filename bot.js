@@ -30,7 +30,9 @@ bot.on('disconnect', function(errMsg, code) {
 });
 
 bot.on('message', function (message) {
+    //logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
     if (chanArr.indexOf(message.channel.id) > -1) {
+        logger.debug(message);
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
 
         var post_data = {};
