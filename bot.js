@@ -3,6 +3,7 @@ var Discord = require('discord.js');
 var _ = require("underscore");
 var logger = require('winston');
     logger.info('Initializing bot');
+    logger.level = 'debug';
 var bot = new Discord.Client();
     bot.login(auth.token);
 
@@ -30,7 +31,7 @@ bot.on('disconnect', function(errMsg, code) {
 });
 
 bot.on('message', function (message) {
-    //logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+    logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
     if (chanArr.indexOf(message.channel.id) > -1) {
         logger.debug(message);
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
