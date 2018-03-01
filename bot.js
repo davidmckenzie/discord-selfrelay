@@ -38,7 +38,7 @@ bot.on('message', function (message) {
 
         if (message.content && message.content != '') {
             console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
-            post_data.content = `**#${message.channel.name}** ${message.author.username}: ${message.content}`
+            post_data.content = `**#${message.channel.name}**: ${message.content}`
         }
 
         if (message.embeds.length > 0) {
