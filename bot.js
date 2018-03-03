@@ -111,7 +111,8 @@ bot.on('messageUpdate', function (oldMessage, newMessage) {
     logger.debug('==== DEBUG ====');
     logger.debug(`EDIT: #${newMessage.channel.name} ${newMessage.author.username}: ${newMessage.content}`);
     if (newMessage.attachments) {
-        logger.debug(`newMessage attachments: ${util.inspect(newMessage.attachments)}`);
+        logger.debug(`newMessage attachments: `);
+        logger.debug(util.inspect(newMessage.attachments));
     }
     logger.debug('===============');
 });
