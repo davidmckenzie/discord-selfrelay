@@ -1,3 +1,4 @@
+var util = require('util');
 var auth = require('./auth.json');
 var Discord = require('discord.js');
 var _ = require("underscore");
@@ -34,8 +35,8 @@ bot.on('message', function (message) {
     logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
     if (chanArr.indexOf(message.channel.id) > -1) {
         logger.debug('==== DEBUG ====');
-        logger.debug(message.attachments);
-        logger.debug(message.embeds);
+        logger.debug(util.inspect(message.attachments));
+        logger.debug(util.inspect(message.embeds));
         logger.debug(message.type);
         logger.debug('===============');
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
@@ -78,7 +79,7 @@ bot.on('message', function (message) {
         }
 
         if (message.attachments.length > 0) {
-            console.log(message.attachments);
+            console.log(util.inspect(message.attachments));
             var attach = message.attachments[0];
             post_data.content += '\n'+attach.url;
         }
@@ -110,7 +111,7 @@ bot.on('messageUpdate', function (oldMessage, newMessage) {
     logger.debug('==== DEBUG ====');
     logger.debug(`EDIT: #${newMessage.channel.name} ${newMessage.author.username}: ${newMessage.content}`);
     if (newMessage.attachments) {
-        logger.debug(`newMessage attachments: ${newMessage.attachments}`);
+        logger.debug(`newMessage attachments: ${util.inspect(newMessage.attachments)}`);
     }
     logger.debug('===============');
 });
