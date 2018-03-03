@@ -33,7 +33,11 @@ bot.on('disconnect', function(errMsg, code) {
 bot.on('message', function (message) {
     logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
     if (chanArr.indexOf(message.channel.id) > -1) {
-        logger.debug(message);
+        logger.debug('==== DEBUG ====');
+        logger.debug(message.attachments);
+        logger.debug(message.embeds);
+        logger.debug(message.type);
+        logger.debug('===============');
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
 
         var post_data = {};
@@ -45,6 +49,9 @@ bot.on('message', function (message) {
         }
 
         if (message.embeds.length > 0) {
+            logger.debug('==== DEBUG ====');
+            logger.debug(message.embeds);
+            logger.debug('===============');
             var embed = message.embeds[0];
             delete embed['message'];
             delete embed['createdTimestamp'];
@@ -96,4 +103,14 @@ bot.on('message', function (message) {
           //console.log('body: ', body)
         })
     }
+});
+
+bot.on('messageUpdate', function (oldMessage, newMessage) {
+    // debugging
+    logger.debug('==== DEBUG ====');
+    logger.debug(`EDIT: #${newMessage.channel.name} ${newMessage.author.username}: ${newMessage.content}`);
+    if (newMessage.attachments) {
+        logger.debug(`newMessage attachments: ${newMessage.attachments}`);
+    }
+    logger.debug('===============');
 });
