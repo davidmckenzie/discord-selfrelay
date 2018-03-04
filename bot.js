@@ -109,7 +109,7 @@ bot.on('messageUpdate', function (oldMessage, newMessage) {
     // debugging
     logger.debug('==== DEBUG ====');
     logger.debug(`EDIT: #${newMessage.channel.name} ${newMessage.author.username}: ${newMessage.content}`);
-    if (newMessage.attachments) {
+    if (newMessage.attachments.length > 0) {
         logger.debug(`newMessage attachments: `);
         logger.debug(JSON.stringify(newMessage.attachments));
     }
