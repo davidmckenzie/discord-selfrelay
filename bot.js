@@ -78,9 +78,10 @@ bot.on('message', function (message) {
             post_data.embeds = [embed];
         }
 
-        if (message.attachments.length > 0) {
-            console.log(util.inspect(message.attachments));
-            var attach = message.attachments[0];
+        var attachArray = message.attachments.array();
+        if (attachArray.length > 0) {
+            console.log(util.inspect(attachArray));
+            var attach = attachArray[0];
             post_data.content += '\n'+attach.url;
         }
         
