@@ -17,11 +17,21 @@ bot.on('ready', function () {
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(bot.user.username + ' - (' + bot.user.id + ')');
+    var channelArr = bot.channels.array();
+    console.log(`\nAvailable channels:\n`);
+    for (i in channelArr) {
+        console.log(`${channelArr[i].name} (${channelArr[i].id}): Guild: ${channelArr[i].guild}`);
+    }
+    console.log(`\n\nListening to:\n`);
     for (i in channels) {
-        channels[i].id = bot.channels.find('name', channels[i].name).id;
-        console.log(`Found channel ${channels[i].name} with ID ${channels[i].id}`);
-        chanArr.push(channels[i].id);
-        console.log(channels[i]);
+        if (bot.channels.exists('name', channels[i].name)) {
+            channels[i].id = bot.channels.find('name', channels[i].name).id;
+            console.log(`Found channel ${channels[i].name} with ID ${channels[i].id}`);
+            chanArr.push(channels[i].id);
+            console.log(channels[i]);
+        } else {
+            console.log(`Could not find channel ${channels[i].name}`);
+        }
     }
 });
 
