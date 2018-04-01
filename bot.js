@@ -37,7 +37,7 @@ bot.on('ready', function () {
             if (bot.channels.has(channels[i].id)) {
                 channels[i].name = bot.channels.get(channels[i].id).name;
                 console.log(`Found channel ${channels[i].name} with ID ${channels[i].id}`);
-                chanArr.push(channels[i].name);
+                chanArr.push(channels[i].id);
                 console.log(channels[i]);
             } else {
                 console.log(`Could not find channel name for id ${channels[i].id}`);
