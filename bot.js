@@ -63,7 +63,7 @@ bot.on('message', function (message) {
         var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
 
         var post_data = {};
-            post_data.username = message.guild.name;
+            //post_data.username = message.guild.name;
 
         if (message.content && message.content != '') {
             console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
