@@ -19,6 +19,9 @@ bot.on('ready', function () {
     logger.info('Connected');
     logger.info('Logged in as: ');
     logger.info(bot.user.username + ' - (' + bot.user.id + ')');
+    bot.user.setStatus('invisible')
+        .then(console.log)
+        .catch(console.error);
     var channelArr = bot.channels.array();
     console.log(`\nAvailable channels:\n`);
     for (i in channelArr) {
