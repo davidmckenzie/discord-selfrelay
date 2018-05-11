@@ -40,7 +40,7 @@ bot.on('ready', function () {
                 .then(messages => console.log(`Received ${messages.size} messages\n\n${messages.array()}`))
                 .catch(console.error);
             } else {
-                console.log(`Could not find channel ${channels[i].name}`);
+                logger.warn(`Could not find channel ${channels[i].name}`);
             }
         } else if (channels[i].id) {
             if (bot.channels.has(channels[i].id)) {
@@ -53,23 +53,23 @@ bot.on('ready', function () {
                 .then(messages => console.log(`Received ${messages.size} messages\n\n${messages.array()}`))
                 .catch(console.error);
             } else {
-                console.log(`Could not find channel name for id ${channels[i].id}`);
+                logger.warn(`Could not find channel name for id ${channels[i].id}`);
             }
         }
     }
 });
 
 bot.on('disconnect', function(errMsg, code) {
-    console.log(errMsg);
-    console.log('----- Bot disconnected from Discord with code', code, 'for reason:', errMsg, '-----');
+    logger.warn(errMsg);
+    logger.warn('----- Bot disconnected from Discord with code', code, 'for reason:', errMsg, '-----');
     bot.login(auth.token);
 });
 
 bot.on('channelUpdate', function(oldChannel, newChannel) {
     console.log('channelUpdate EVENT');
     if (newChannel.permissionOverwrites.has(bot.user.id)) {
-        console.log('permission change detected');
-        console.log(newChannel.permissionOverwrites);
+        logger.warn('permission change detected');
+        logger.warn(newChannel.permissionOverwrites);
         relay = false;
         clearTimeout(timeout);
         timeout = setTimeout(function(){ 
@@ -81,11 +81,11 @@ bot.on('channelUpdate', function(oldChannel, newChannel) {
 });
 
 bot.on('guildMemberUpdate', function(oldMember, newMember) {
-    console.log('guildMemberUpdate EVENT');
-    delete newMember.guild;
-    console.log(newMember);
+    logger.warn('guildMemberUpdate EVENT');
     if(newMember.id == bot.user.id) {
-        console.log('bot user changed!');
+        delete newMember.guild;
+        logger.warn(newMember);
+        logger.warn('bot user changed!');
         relay = false;
         clearTimeout(timeout);
         timeout = setTimeout(function(){ 
@@ -98,18 +98,18 @@ bot.on('message', function (message) {
     logger.debug(`#${message.channel.name} ${message.author.username}: ${message.content}`);
     if (chanArr.indexOf(message.channel.id) > -1) {
         if (relay) {
-            logger.debug('==== DEBUG ====');
-            logger.debug(util.inspect(message.attachments));
-            logger.debug(util.inspect(message.embeds));
-            logger.debug(message.type);
-            logger.debug('===============');
+            // logger.debug('==== DEBUG ====');
+            // logger.debug(util.inspect(message.attachments));
+            // logger.debug(util.inspect(message.embeds));
+            // logger.debug(message.type);
+            // logger.debug('===============');
             var obj = _.find(channels, function (obj) { return obj.id === message.channel.id; });
 
             var post_data = {};
                 //post_data.username = message.guild.name;
 
             if (message.content && message.content != '') {
-                console.log(`#${message.channel.name} ${message.author.username}: ${message.content}`);
+                logger.info(`#${message.channel.name} ${message.author.username}: ${message.content}`);
                 post_data.content = `**#${message.channel.name}**: ${message.content}`
             }
 
@@ -137,36 +137,36 @@ bot.on('message', function (message) {
                         delete embed[propName];
                     }
                 }
-                console.log(embed);
+                logger.debug(embed);
                 var embedTest = {"color":"#3AA3E3","fields":[{"name":"name","value":"value","inline":false},{"name":"name","value":"value","inline":true}]};
                 post_data.embeds = [embed];
             }
 
             var attachArray = message.attachments.array();
             if (attachArray.length > 0) {
-                console.log(util.inspect(attachArray));
+                // logger.debug(util.inspect(attachArray));
                 var attach = attachArray[0];
+                logger.debug(attach.url);
                 post_data.content += '\n'+attach.url;
             }
             
             var url = obj.webhook;
             var options = {
-            method: 'post',
-            body: post_data,
-            json: true,
-            url: url
-            }
-
+                method: 'post',
+                body: post_data,
+                json: true,
+                url: url
+            };
             request(options, function (err, res, body) {
-            if (err) {
-                console.error('error posting json: ', err)
-                throw err
-            }
-            var headers = res.headers
-            var statusCode = res.statusCode
-            //console.log('headers: ', headers)
-            console.log('statusCode: ', statusCode)
-            //console.log('body: ', body)
+                if (err) {
+                    console.error('error posting json: ', err)
+                    throw err
+                }
+                var headers = res.headers
+                var statusCode = res.statusCode
+                //console.log('headers: ', headers)
+                console.log('Sent webhook statusCode: ', statusCode)
+                //console.log('body: ', body)
             });
         } else {
             logger.warn('==== WARN ====');
